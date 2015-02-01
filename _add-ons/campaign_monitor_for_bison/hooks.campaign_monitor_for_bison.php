@@ -25,10 +25,10 @@ class Hooks_campaign_monitor_for_bison extends Hooks
 
 		if (array_get($order_details, $trigger_field) == $trigger_value) {
 
-      $full_name = order_details['first_name'] . " " . order_details['last_name'];
+      $full_name = $order_details['first_name'] . " " . $order_details['last_name'];
 
 			$data = json_encode(array(
-				'EmailAddress' => order_details['email'],
+				'EmailAddress' => $order_details['email'],
 				'Name'         => $full_name
 			));
 

@@ -15,7 +15,6 @@ class Hooks_campaign_monitor_for_bison extends Hooks
 			$this->log->error('cURL is not installed.');
 			return;
 		}
-		// $this->order_details = $order_details;
 
 		$api_key = array_get($this->config, 'api_key');
 		$list_id = array_get($this->config, 'list_id');
@@ -23,13 +22,23 @@ class Hooks_campaign_monitor_for_bison extends Hooks
 		$trigger_field = $this->config['trigger_field'];
 		$trigger_value = $this->config['trigger_value'];
 
-		if (array_get($order_details, $trigger_field) == $trigger_value) {
+		if (array_get($order_details, 'custom_data:' . $trigger_field) == $trigger_value) {
 
       $full_name = $order_details['first_name'] . " " . $order_details['last_name'];
-
+      $custom_fields = array(
+              array(
+                  'Key' => 'Source',
+                  'Value' => 'Checkout Form'
+              ),
+              array(
+                  'Key' => 'Country',
+                  'Value' => $order_details['shipping_country']
+              ));
+              
 			$data = json_encode(array(
 				'EmailAddress' => $order_details['email'],
-				'Name'         => $full_name
+				'Name'         => $full_name,
+				'CustomFields' => $custom_fields
 			));
 
 			$url = 'https://api.createsend.com/api/v3.1/subscribers/' . $list_id . '.json';
